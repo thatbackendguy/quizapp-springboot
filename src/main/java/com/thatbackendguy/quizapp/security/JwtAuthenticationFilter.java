@@ -22,13 +22,19 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter
 {
 
-    private Logger logger = LoggerFactory.getLogger(OncePerRequestFilter.class);
+    private final Logger logger = LoggerFactory.getLogger(OncePerRequestFilter.class);
+
+    private final JwtHelper jwtHelper;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    private JwtHelper jwtHelper;
+    public JwtAuthenticationFilter(JwtHelper jwtHelper, UserDetailsService userDetailsService)
+    {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+        this.jwtHelper = jwtHelper;
+        this.userDetailsService = userDetailsService;
+    }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException

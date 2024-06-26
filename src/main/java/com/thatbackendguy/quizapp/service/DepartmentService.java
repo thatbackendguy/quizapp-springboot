@@ -31,6 +31,9 @@ public class DepartmentService
     {
 
         var departments = departmentRepository.findAll();
+
+        if (departments.isEmpty()) throw new DepartmentNotFoundException();
+
         return departments.stream()
                 .map(dept -> modelMapper.map(dept, DepartmentDTO.class))
                 .collect(Collectors.toList());
@@ -40,6 +43,7 @@ public class DepartmentService
     {
 
         var departmentEntity = departmentRepository.findById(id).orElseThrow(() -> new DepartmentNotFoundException(id));
+
         return modelMapper.map(departmentEntity, DepartmentDTO.class);
     }
 

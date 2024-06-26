@@ -42,6 +42,9 @@ public class UserService
     {
 
         var users = userRepository.findAll();
+
+        if(users.isEmpty()) throw new UserNotFoundException();
+
         return users.stream()
                 .map(userEntity -> modelMapper.map(userEntity, UserDTO.class))
                 .collect(Collectors.toList());
@@ -51,6 +54,7 @@ public class UserService
     {
 
         var userEntity = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+
         return modelMapper.map(userEntity, UserDTO.class);
     }
 

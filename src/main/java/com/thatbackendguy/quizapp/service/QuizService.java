@@ -38,6 +38,8 @@ public class QuizService
 
         var quizzes = quizRepository.findAll();
 
+        if (quizzes.isEmpty()) throw new QuizNotFoundException();
+
         return quizzes.stream()
                 .map(quizEntity -> modelMapper.map(quizEntity, QuizDTO.class))
                 .collect(Collectors.toList());
@@ -104,9 +106,14 @@ public class QuizService
 
         var department = departmentRepository.findByName(deptName);
 
+        if (department == null) throw new DepartmentNotFoundException(deptName);
+
         var quizzes = quizRepository.findByDeptId(department.getId());
 
+        if (quizzes.isEmpty()) throw new QuizNotFoundException(deptName);
+
         return quizzes.stream().map(quiz -> modelMapper.map(quiz, QuizDTO.class)).collect(Collectors.toList());
+
     }
 
 }

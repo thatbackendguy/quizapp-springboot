@@ -39,7 +39,7 @@ public class SecurityConfig
                 .authenticated()
                 .requestMatchers("/api/quizzes/**")
                 .authenticated()
-                .requestMatchers("/api/users")
+                .requestMatchers("/api/users/**")
                 .authenticated()
                 .requestMatchers("/api/auth/login")
                 .permitAll()

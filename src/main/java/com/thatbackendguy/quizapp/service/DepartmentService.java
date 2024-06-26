@@ -71,36 +71,47 @@ public class DepartmentService
         return modelMapper.map(departmentEntity, DepartmentDTO.class);
     }
 
-    public DepartmentDTO updateDepartment(Long id, DepartmentDTO departmentDetails)
+    public DepartmentDTO updateDepartment(DepartmentDTO departmentDTO)
     {
 
-        if (id == null)
+        if (departmentDTO.getId() == null)
         {
-            throw new BadRequestException("ID is required");
+            throw new BadRequestException("Department ID is required");
+        }
+        else if (departmentDTO.getId() <= 0)
+        {
+            throw new BadRequestException("Department ID must be a positive number");
+        }
+        else if (departmentDTO.getName().isEmpty())
+        {
+            throw new BadRequestException("Department name is required");
         }
 
-        var departmentEntity = departmentRepository.findById(id).map(department ->
+        var departmentEntity = departmentRepository.findById(departmentDTO.getId()).map(department ->
         {
-            department.setName(departmentDetails.getName());
+            department.setName(departmentDTO.getName());
             return departmentRepository.save(department);
-        }).orElseThrow(() -> new DepartmentNotFoundException(id));
+        }).orElseThrow(() -> new DepartmentNotFoundException(departmentDTO.getId()));
 
         return modelMapper.map(departmentEntity, DepartmentDTO.class);
     }
 
-    public void deleteDepartment(Long id)
+    public void deleteDepartment(DepartmentDTO departmentDTO)
     {
-
-        if (id == null)
+        if (departmentDTO.getId() == null)
         {
-            throw new BadRequestException("ID is required");
+            throw new BadRequestException("Department ID is required");
+        }
+        else if (departmentDTO.getId() <= 0)
+        {
+            throw new BadRequestException("Department ID must be a positive number");
         }
 
-        if (!departmentRepository.existsById(id))
+        if (!departmentRepository.existsById(departmentDTO.getId()))
         {
-            throw new DepartmentNotFoundException(id);
+            throw new DepartmentNotFoundException(departmentDTO.getId());
         }
-        departmentRepository.deleteById(id);
+        departmentRepository.deleteById(departmentDTO.getId());
     }
 
 }

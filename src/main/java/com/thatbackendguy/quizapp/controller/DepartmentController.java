@@ -1,7 +1,6 @@
 package com.thatbackendguy.quizapp.controller;
 
 import com.thatbackendguy.quizapp.dto.DepartmentDTO;
-import com.thatbackendguy.quizapp.exception.BadRequestException;
 import com.thatbackendguy.quizapp.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,20 +45,7 @@ public class DepartmentController
     public ResponseEntity<DepartmentDTO> updateDepartment(@RequestBody DepartmentDTO departmentDTO)
     {
 
-        if (departmentDTO.getId() == null)
-        {
-            throw new BadRequestException("Department ID is required");
-        }
-        else if (departmentDTO.getId() <= 0)
-        {
-            throw new BadRequestException("Department ID must be a positive number");
-        }
-        else if (departmentDTO.getName().isEmpty())
-        {
-            throw new BadRequestException("Department name is required");
-        }
-
-        var updatedDepartment = departmentService.updateDepartment(departmentDTO.getId(), departmentDTO);
+        var updatedDepartment = departmentService.updateDepartment(departmentDTO);
 
         return ResponseEntity.ok(updatedDepartment);
     }
@@ -68,16 +54,7 @@ public class DepartmentController
     public ResponseEntity<Void> deleteDepartment(@RequestBody DepartmentDTO departmentDTO)
     {
 
-        if (departmentDTO.getId() == null)
-        {
-            throw new BadRequestException("Department ID is required");
-        }
-        else if (departmentDTO.getId() <= 0)
-        {
-            throw new BadRequestException("Department ID must be a positive number");
-        }
-
-        departmentService.deleteDepartment(departmentDTO.getId());
+        departmentService.deleteDepartment(departmentDTO);
 
         return ResponseEntity.noContent().build();
     }

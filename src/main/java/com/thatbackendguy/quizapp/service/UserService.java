@@ -4,6 +4,7 @@ import com.thatbackendguy.quizapp.dto.QuizResponseDTO;
 import com.thatbackendguy.quizapp.dto.UserDTO;
 import com.thatbackendguy.quizapp.entity.DepartmentEntity;
 import com.thatbackendguy.quizapp.entity.UserEntity;
+import com.thatbackendguy.quizapp.exception.BadRequestException;
 import com.thatbackendguy.quizapp.exception.DepartmentNotFoundException;
 import com.thatbackendguy.quizapp.exception.UserNotFoundException;
 import com.thatbackendguy.quizapp.repository.DepartmentRepository;
@@ -92,10 +93,35 @@ public class UserService
         return modelMapper.map(userEntity, UserDTO.class);
     }
 
-    public UserDTO updateUser(Long id, UserDTO userDTO)
+    public UserDTO updateUser(UserDTO userDTO)
     {
 
-        var userEntity = userRepository.findById(id).map(user ->
+        if (userDTO.getId() == null)
+        {
+            throw new BadRequestException("User ID is required");
+        }
+        else if (userDTO.getId() <= 0)
+        {
+            throw new BadRequestException("User ID must be a positive number");
+        }
+        else if (userDTO.getDepartmentId() == null)
+        {
+            throw new BadRequestException("Department ID is required");
+        }
+        else if (userDTO.getDepartmentId() <= 0)
+        {
+            throw new BadRequestException("Department ID must be a positive number");
+        }
+        else if (userDTO.getEmail().isEmpty())
+        {
+            throw new BadRequestException("Email is required");
+        }
+        else if (userDTO.getName().isEmpty())
+        {
+            throw new BadRequestException("Name is required");
+        }
+
+        var userEntity = userRepository.findById(userDTO.getId()).map(user ->
         {
             user.setName(userDTO.getName());
             user.setEmail(userDTO.getEmail());
@@ -108,19 +134,26 @@ public class UserService
             }
 
             return userRepository.save(user);
-        }).orElseThrow(() -> new UserNotFoundException(id));
+        }).orElseThrow(() -> new UserNotFoundException(userDTO.getId()));
 
         return modelMapper.map(userEntity, UserDTO.class);
     }
 
-    public void deleteUser(Long id)
+    public void deleteUser(UserDTO userDTO)
     {
-
-        if (!userRepository.existsById(id))
+        if (userDTO.getId() == null)
         {
-            throw new UserNotFoundException(id);
+            throw new BadRequestException("User ID is required");
         }
-        userRepository.deleteById(id);
+        else if (userDTO.getId() <= 0)
+        {
+            throw new BadRequestException("User ID must be a positive number");
+        }
+        if (!userRepository.existsById(userDTO.getId()))
+        {
+            throw new UserNotFoundException(userDTO.getId());
+        }
+        userRepository.deleteById(userDTO.getId());
     }
 
     public List<QuizResponseDTO> getQuizzes(String username)

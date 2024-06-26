@@ -78,6 +78,27 @@ public class QuizService
     public QuizDTO createQuiz(QuizDTO quizDTO)
     {
 
+        if (quizDTO.getQuestion().isEmpty())
+        {
+            throw new BadRequestException("Question is required");
+        }
+        else if (quizDTO.getAnswer().isEmpty())
+        {
+            throw new BadRequestException("Answer is required");
+        }
+        else if (quizDTO.getOptions().isEmpty())
+        {
+            throw new BadRequestException("Options are required");
+        }
+        else if (quizDTO.getDepartment().getId() <= 0)
+        {
+            throw new BadRequestException("Valid department ID is required");
+        }
+        else if (quizDTO.getDepartment().getName().isEmpty())
+        {
+            throw new BadRequestException("Department name is required");
+        }
+
         var quizEntity = modelMapper.map(quizDTO, QuizEntity.class);
 
         if (quizEntity.getDepartment() != null && quizEntity.getDepartment().getId() != null)
@@ -92,45 +113,73 @@ public class QuizService
         return modelMapper.map(quiz, QuizDTO.class);
     }
 
-    public QuizDTO updateQuiz(Long id, QuizDTO quizDetails)
+    public QuizDTO updateQuiz(QuizDTO quizDTO)
     {
 
-        if (id == null)
+        if (quizDTO.getId() == null)
         {
-            throw new BadRequestException("ID is required");
+            throw new BadRequestException("Quiz ID is required");
+        }
+        else if (quizDTO.getId() <= 0)
+        {
+            throw new BadRequestException("Quiz ID must be a positive number");
+        }
+        else if (quizDTO.getDepartment() == null)
+        {
+            throw new BadRequestException("Department is required");
+        }
+        else if (quizDTO.getDepartment().getId() <= 0)
+        {
+            throw new BadRequestException("Valid department ID is required");
+        }
+        else if (quizDTO.getOptions().isEmpty())
+        {
+            throw new BadRequestException("Options are required");
+        }
+        else if (quizDTO.getAnswer().isEmpty())
+        {
+            throw new BadRequestException("Answer is required");
+        }
+        else if (quizDTO.getQuestion().isEmpty())
+        {
+            throw new BadRequestException("Question is required");
         }
 
-        var quizEntity = quizRepository.findById(id).map(quiz ->
+        var quizEntity = quizRepository.findById(quizDTO.getId()).map(quiz ->
         {
-            quiz.setQuestion(quizDetails.getQuestion());
-            quiz.setOptions(quizDetails.getOptions());
-            quiz.setAnswer(quizDetails.getAnswer());
-            if (quizDetails.getDepartment() != null && quizDetails.getDepartment().getId() != null)
+            quiz.setQuestion(quizDTO.getQuestion());
+            quiz.setOptions(quizDTO.getOptions());
+            quiz.setAnswer(quizDTO.getAnswer());
+            if (quizDTO.getDepartment() != null && quizDTO.getDepartment().getId() != null)
             {
-                var department = departmentRepository.findById(quizDetails.getDepartment().getId())
-                        .orElseThrow(() -> new DepartmentNotFoundException(quizDetails.getDepartment().getId()));
+                var department = departmentRepository.findById(quizDTO.getDepartment().getId())
+                        .orElseThrow(() -> new DepartmentNotFoundException(quizDTO.getDepartment().getId()));
 
                 quiz.setDepartment(department);
             }
             return quizRepository.save(quiz);
-        }).orElseThrow(() -> new QuizNotFoundException(id));
+        }).orElseThrow(() -> new QuizNotFoundException(quizDTO.getId()));
 
         return modelMapper.map(quizEntity, QuizDTO.class);
     }
 
-    public void deleteQuiz(Long id)
+    public void deleteQuiz(QuizDTO quizDTO)
     {
 
-        if (id == null)
+        if (quizDTO.getId() == null)
         {
-            throw new BadRequestException("ID is required");
+            throw new BadRequestException("Quiz ID is required");
+        }
+        else if (quizDTO.getId() <= 0)
+        {
+            throw new BadRequestException("Quiz ID must be a positive number");
         }
 
-        if (!quizRepository.existsById(id))
+        if (!quizRepository.existsById(quizDTO.getId()))
         {
-            throw new QuizNotFoundException(id);
+            throw new QuizNotFoundException(quizDTO.getId());
         }
-        quizRepository.deleteById(id);
+        quizRepository.deleteById(quizDTO.getId());
     }
 
 }

@@ -16,8 +16,7 @@ public class CustomErrorController implements ErrorController
     public ResponseEntity<ErrorDTO> handleError(HttpServletRequest request)
     {
 
-        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
-        Exception exception = (Exception) request.getAttribute("javax.servlet.error.exception");
+        var exception = (Exception) request.getAttribute("javax.servlet.error.exception");
 
         var errorResponse = new ErrorDTO();
 

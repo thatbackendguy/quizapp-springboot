@@ -1,10 +1,13 @@
 package com.thatbackendguy.quizapp.controller;
 
+import com.thatbackendguy.quizapp.dto.QuizDTO;
 import com.thatbackendguy.quizapp.dto.UserDTO;
 import com.thatbackendguy.quizapp.dto.UserUpdateDTO;
 import com.thatbackendguy.quizapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,6 +56,26 @@ public class UserController
 
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/home")
+    public ResponseEntity<List<QuizDTO>> getUserQuizzes()
+    {
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String username;
+
+        if (principal instanceof UserDetails)
+        {
+            username = ( (UserDetails) principal ).getUsername();
+        }
+        else
+        {
+            username = principal.toString();
+        }
+
+        return ResponseEntity.ok(userService.getQuizzes(username));
     }
 
 }

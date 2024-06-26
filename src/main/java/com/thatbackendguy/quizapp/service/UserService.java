@@ -1,5 +1,6 @@
 package com.thatbackendguy.quizapp.service;
 
+import com.thatbackendguy.quizapp.dto.QuizDTO;
 import com.thatbackendguy.quizapp.dto.UserDTO;
 import com.thatbackendguy.quizapp.dto.UserUpdateDTO;
 import com.thatbackendguy.quizapp.entity.DepartmentEntity;
@@ -7,6 +8,7 @@ import com.thatbackendguy.quizapp.entity.UserEntity;
 import com.thatbackendguy.quizapp.exception.DepartmentNotFoundException;
 import com.thatbackendguy.quizapp.exception.UserNotFoundException;
 import com.thatbackendguy.quizapp.repository.DepartmentRepository;
+import com.thatbackendguy.quizapp.repository.QuizRepository;
 import com.thatbackendguy.quizapp.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +30,17 @@ public class UserService
 
     private final PasswordEncoder passwordEncoder;
 
+    private final QuizRepository quizRepository;
+
     @Autowired
-    public UserService(UserRepository userRepository, DepartmentRepository departmentRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder)
+    public UserService(UserRepository userRepository, DepartmentRepository departmentRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, QuizRepository quizRepository)
     {
 
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.departmentRepository = departmentRepository;
         this.modelMapper = modelMapper;
+        this.quizRepository = quizRepository;
     }
 
     public List<UserDTO> getAllUsers()
@@ -43,7 +48,7 @@ public class UserService
 
         var users = userRepository.findAll();
 
-        if(users.isEmpty()) throw new UserNotFoundException();
+        if (users.isEmpty()) throw new UserNotFoundException();
 
         return users.stream()
                 .map(userEntity -> modelMapper.map(userEntity, UserDTO.class))
@@ -99,6 +104,20 @@ public class UserService
             throw new UserNotFoundException(id);
         }
         userRepository.deleteById(id);
+    }
+
+    public List<QuizDTO> getQuizzes(String username)
+    {
+
+        var userEntity = userRepository.findByUsername(username);
+
+        if (userEntity == null) throw new UserNotFoundException(username);
+
+        var quizzes = quizRepository.findByDeptId(userEntity.getDepartment().getId());
+
+        return quizzes.stream()
+            .map(quizEntity -> modelMapper.map(quizEntity, QuizDTO.class))
+            .collect(Collectors.toList());
     }
 
 }

@@ -48,7 +48,7 @@ public class UserService
 
         List<UserEntity> users;
 
-        if (userDTO == null)
+        if (userDTO == null || userDTO.getId() == null)
         {
             users = userRepository.findAll();
         }

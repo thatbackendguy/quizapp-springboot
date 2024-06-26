@@ -41,11 +41,11 @@ public class QuizService
 
         List<QuizEntity> quizzes;
 
-        if (quizDTO == null)
+        if (quizDTO == null || quizDTO.getId() == null)
         {
             quizzes = quizRepository.findAll();
         }
-        else if (quizDTO.getId() != null && quizDTO.getId() > 0)
+        else if (quizDTO.getId() > 0)
         {
             quizzes = quizRepository.findById(quizDTO.getId())
                     .map(Collections::singletonList)

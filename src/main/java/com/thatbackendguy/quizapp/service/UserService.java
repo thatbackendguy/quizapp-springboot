@@ -4,7 +4,6 @@ import com.thatbackendguy.quizapp.dto.QuizResponseDTO;
 import com.thatbackendguy.quizapp.dto.UserDTO;
 import com.thatbackendguy.quizapp.entity.DepartmentEntity;
 import com.thatbackendguy.quizapp.entity.UserEntity;
-import com.thatbackendguy.quizapp.exception.BadRequestException;
 import com.thatbackendguy.quizapp.exception.DepartmentNotFoundException;
 import com.thatbackendguy.quizapp.exception.UserNotFoundException;
 import com.thatbackendguy.quizapp.repository.DepartmentRepository;
@@ -15,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,27 +46,31 @@ public class UserService
     public List<UserDTO> getUsers(UserDTO userDTO)
     {
 
-        if (userDTO.getId() == null)
+        List<UserEntity> users;
+
+        if (userDTO == null)
         {
-            var users = userRepository.findAll();
-
-            if (users.isEmpty()) throw new UserNotFoundException();
-
-            return users.stream()
-                    .map(userEntity -> modelMapper.map(userEntity, UserDTO.class))
-                    .collect(Collectors.toList());
+            users = userRepository.findAll();
+        }
+        else if (userDTO.getId() > 0)
+        {
+            users = userRepository.findById(userDTO.getId())
+                    .map(Collections::singletonList)
+                    .orElseThrow(() -> new UserNotFoundException(userDTO.getId()));
+        }
+        else
+        {
+            users = userRepository.findAll();
         }
 
-        if (userDTO.getId() <= 0) throw new BadRequestException();
+        if (users.isEmpty())
+        {
+            throw new UserNotFoundException();
+        }
 
-        var userEntity = userRepository.findById(userDTO.getId())
-                .orElseThrow(() -> new UserNotFoundException(userDTO.getId()));
-
-        var list = new ArrayList<UserDTO>();
-
-        list.add(modelMapper.map(userEntity, UserDTO.class));
-
-        return list;
+        return users.stream()
+                .map(userEntity -> modelMapper.map(userEntity, UserDTO.class))
+                .collect(Collectors.toList());
 
     }
 

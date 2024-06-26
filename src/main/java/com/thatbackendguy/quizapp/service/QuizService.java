@@ -41,7 +41,11 @@ public class QuizService
 
         List<QuizEntity> quizzes;
 
-        if (quizDTO.getId() != null)
+        if (quizDTO == null)
+        {
+            quizzes = quizRepository.findAll();
+        }
+        else if (quizDTO.getId() != null && quizDTO.getId() > 0)
         {
             quizzes = quizRepository.findById(quizDTO.getId())
                     .map(Collections::singletonList)
@@ -55,18 +59,15 @@ public class QuizService
                 throw new DepartmentNotFoundException(quizDTO.getDeptName());
             }
             quizzes = quizRepository.findByDeptId(department.getId());
-            if (quizzes.isEmpty())
-            {
-                throw new QuizNotFoundException(quizDTO.getDeptName());
-            }
         }
         else
         {
             quizzes = quizRepository.findAll();
-            if (quizzes.isEmpty())
-            {
-                throw new QuizNotFoundException();
-            }
+        }
+
+        if (quizzes.isEmpty())
+        {
+            throw new QuizNotFoundException();
         }
 
         return quizzes.stream()

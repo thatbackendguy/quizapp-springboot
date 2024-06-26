@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,22 +32,27 @@ public class DepartmentService
     public List<DepartmentDTO> getDepartment(DepartmentDTO departmentDTO)
     {
 
-        if (departmentDTO.getId() == null) // id field is not available in body
+        List<DepartmentEntity> departments;
+
+        if (departmentDTO == null || departmentDTO.getId() == null)
         {
-            var departments = departmentRepository.findAll();
-
-            if (departments.isEmpty()) throw new DepartmentNotFoundException();
-
-            return departments.stream()
-                    .map(dept -> modelMapper.map(dept, DepartmentDTO.class))
-                    .collect(Collectors.toList());
+            departments = departmentRepository.findAll();
+        }
+        else if (departmentDTO.getId() > 0)
+        {
+            departments = departmentRepository.findById(departmentDTO.getId())
+                    .map(Collections::singletonList)
+                    .orElseThrow(() -> new DepartmentNotFoundException(departmentDTO.getId()));
+        }
+        else
+        {
+            throw new BadRequestException();
         }
 
-        if (departmentDTO.getId() <= 0) throw new BadRequestException();
-
-        var departments = departmentRepository.findById(departmentDTO.getId());
-
-        if (departments.isEmpty()) throw new DepartmentNotFoundException();
+        if (departments.isEmpty())
+        {
+            throw new DepartmentNotFoundException();
+        }
 
         return departments.stream()
                 .map(dept -> modelMapper.map(dept, DepartmentDTO.class))

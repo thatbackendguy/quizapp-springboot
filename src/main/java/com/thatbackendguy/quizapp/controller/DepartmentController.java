@@ -2,7 +2,6 @@ package com.thatbackendguy.quizapp.controller;
 
 import com.thatbackendguy.quizapp.dto.DepartmentDTO;
 import com.thatbackendguy.quizapp.exception.BadRequestException;
-import com.thatbackendguy.quizapp.exception.DepartmentNotFoundException;
 import com.thatbackendguy.quizapp.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,8 +29,6 @@ public class DepartmentController
     {
 
         var departments = departmentService.getDepartment(departmentDTO);
-
-        if (departments.isEmpty()) throw new DepartmentNotFoundException();
 
         return ResponseEntity.ok(departments);
     }

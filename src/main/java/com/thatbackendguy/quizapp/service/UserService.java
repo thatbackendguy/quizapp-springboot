@@ -1,10 +1,10 @@
 package com.thatbackendguy.quizapp.service;
 
-import com.thatbackendguy.quizapp.dto.QuizDTO;
+import com.thatbackendguy.quizapp.dto.QuizResponseDTO;
 import com.thatbackendguy.quizapp.dto.UserDTO;
-import com.thatbackendguy.quizapp.dto.UserUpdateDTO;
 import com.thatbackendguy.quizapp.entity.DepartmentEntity;
 import com.thatbackendguy.quizapp.entity.UserEntity;
+import com.thatbackendguy.quizapp.exception.BadRequestException;
 import com.thatbackendguy.quizapp.exception.DepartmentNotFoundException;
 import com.thatbackendguy.quizapp.exception.UserNotFoundException;
 import com.thatbackendguy.quizapp.repository.DepartmentRepository;
@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,30 +44,43 @@ public class UserService
         this.quizRepository = quizRepository;
     }
 
-    public List<UserDTO> getAllUsers()
+    public List<UserDTO> getUsers(UserDTO userDTO)
     {
 
-        var users = userRepository.findAll();
+        if (userDTO.getId() == null)
+        {
+            var users = userRepository.findAll();
 
-        if (users.isEmpty()) throw new UserNotFoundException();
+            if (users.isEmpty()) throw new UserNotFoundException();
 
-        return users.stream()
-                .map(userEntity -> modelMapper.map(userEntity, UserDTO.class))
-                .collect(Collectors.toList());
-    }
+            return users.stream()
+                    .map(userEntity -> modelMapper.map(userEntity, UserDTO.class))
+                    .collect(Collectors.toList());
+        }
 
-    public UserDTO getUserById(Long id)
-    {
+        if (userDTO.getId() <= 0) throw new BadRequestException();
 
-        var userEntity = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        var userEntity = userRepository.findById(userDTO.getId())
+                .orElseThrow(() -> new UserNotFoundException(userDTO.getId()));
 
-        return modelMapper.map(userEntity, UserDTO.class);
+        var list = new ArrayList<UserDTO>();
+
+        list.add(modelMapper.map(userEntity, UserDTO.class));
+
+        return list;
+
     }
 
     public UserDTO createUser(UserEntity user)
     {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        var deptId = user.getDepartment().getId();
+
+        var dept = departmentRepository.findById(deptId).orElseThrow(() -> new DepartmentNotFoundException(deptId));
+
+        user.setDepartment(dept);
 
         var userEntity = modelMapper.map(user, UserEntity.class);
 
@@ -75,18 +89,18 @@ public class UserService
         return modelMapper.map(userEntity, UserDTO.class);
     }
 
-    public UserDTO updateUser(Long id, UserUpdateDTO userUpdateDTO)
+    public UserDTO updateUser(Long id, UserDTO userDTO)
     {
 
         var userEntity = userRepository.findById(id).map(user ->
         {
-            user.setName(userUpdateDTO.getName());
-            user.setEmail(userUpdateDTO.getEmail());
+            user.setName(userDTO.getName());
+            user.setEmail(userDTO.getEmail());
 
-            if (userUpdateDTO.getDepartmentId() != null)
+            if (userDTO.getDepartmentId() != null)
             {
-                DepartmentEntity departmentEntity = departmentRepository.findById(userUpdateDTO.getDepartmentId())
-                        .orElseThrow(() -> new DepartmentNotFoundException(userUpdateDTO.getDepartmentId()));
+                DepartmentEntity departmentEntity = departmentRepository.findById(userDTO.getDepartmentId())
+                        .orElseThrow(() -> new DepartmentNotFoundException(userDTO.getDepartmentId()));
                 user.setDepartment(departmentEntity);
             }
 
@@ -106,7 +120,7 @@ public class UserService
         userRepository.deleteById(id);
     }
 
-    public List<QuizDTO> getQuizzes(String username)
+    public List<QuizResponseDTO> getQuizzes(String username)
     {
 
         var userEntity = userRepository.findByUsername(username);
@@ -116,8 +130,8 @@ public class UserService
         var quizzes = quizRepository.findByDeptId(userEntity.getDepartment().getId());
 
         return quizzes.stream()
-            .map(quizEntity -> modelMapper.map(quizEntity, QuizDTO.class))
-            .collect(Collectors.toList());
+                .map(quizEntity -> modelMapper.map(quizEntity, QuizResponseDTO.class))
+                .collect(Collectors.toList());
     }
 
 }

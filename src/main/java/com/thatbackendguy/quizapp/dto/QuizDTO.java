@@ -22,4 +22,6 @@ public class QuizDTO
 
     private DepartmentDTO department;
 
+    private String deptName;
+
 }

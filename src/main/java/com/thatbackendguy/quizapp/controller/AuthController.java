@@ -4,6 +4,7 @@ import com.thatbackendguy.quizapp.dto.JwtRequestDTO;
 import com.thatbackendguy.quizapp.dto.JwtResponseDTO;
 import com.thatbackendguy.quizapp.dto.UserDTO;
 import com.thatbackendguy.quizapp.entity.UserEntity;
+import com.thatbackendguy.quizapp.exception.BadRequestException;
 import com.thatbackendguy.quizapp.security.JwtHelper;
 import com.thatbackendguy.quizapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,8 @@ public class AuthController
     public ResponseEntity<JwtResponseDTO> login(@RequestBody JwtRequestDTO request)
     {
 
+        if (request.getUsername().isEmpty() || request.getPassword().isEmpty()) throw new BadRequestException();
+
         this.doAuthenticate(request.getUsername(), request.getPassword());
 
         var userDetails = userDetailsService.loadUserByUsername(request.getUsername());
@@ -57,7 +60,12 @@ public class AuthController
     public ResponseEntity<UserDTO> createUser(@RequestBody UserEntity userEntity)
     {
 
+        if (userEntity.getUsername().isEmpty() || userEntity.getPassword().isEmpty() || userEntity.getName()
+                .isEmpty() || userEntity.getEmail().isEmpty() || userEntity.getDepartment().getId() <= 0)
+            throw new BadRequestException();
+
         var createdUser = userService.createUser(userEntity);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 

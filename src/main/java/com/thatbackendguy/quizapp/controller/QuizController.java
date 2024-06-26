@@ -1,6 +1,8 @@
 package com.thatbackendguy.quizapp.controller;
 
 import com.thatbackendguy.quizapp.dto.QuizDTO;
+import com.thatbackendguy.quizapp.dto.QuizResponseDTO;
+import com.thatbackendguy.quizapp.exception.BadRequestException;
 import com.thatbackendguy.quizapp.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,50 +26,49 @@ public class QuizController
     }
 
     @GetMapping
-    public ResponseEntity<List<QuizDTO>> getAllQuizzes()
+    public ResponseEntity<List<QuizResponseDTO>> getQuiz(@RequestBody(required = false) QuizDTO quizDTO)
     {
 
-        var quizzes = quizService.getAllQuizzes();
+        var quizzes = quizService.getQuiz(quizDTO);
+
         return ResponseEntity.ok(quizzes);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<QuizDTO> getQuizById(@PathVariable Long id)
-    {
-
-        var quiz = quizService.getQuizById(id);
-        return ResponseEntity.ok(quiz);
     }
 
     @PostMapping
     public ResponseEntity<QuizDTO> createQuiz(@RequestBody QuizDTO quizDTO)
     {
 
+        if (quizDTO.getQuestion().isEmpty() || quizDTO.getAnswer().isEmpty() || quizDTO.getOptions()
+                .isEmpty() || quizDTO.getDepartment().getId() <= 0 || quizDTO.getDepartment().getName().isEmpty())
+            throw new BadRequestException();
+
         var createdQuiz = quizService.createQuiz(quizDTO);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(createdQuiz);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<QuizDTO> updateQuiz(@PathVariable Long id, @RequestBody QuizDTO quizDetails)
+    @PutMapping
+    public ResponseEntity<QuizDTO> updateQuiz(@RequestBody QuizDTO quizDTO)
     {
 
-        var updatedQuiz = quizService.updateQuiz(id, quizDetails);
+        if (quizDTO.getId() == null || quizDTO.getId() <= 0 || quizDTO.getDepartment() == null || quizDTO.getDepartment()
+                .getId() <= 0 || quizDTO.getOptions().isEmpty() || quizDTO.getAnswer()
+                .isEmpty() || quizDTO.getQuestion().isEmpty()) throw new BadRequestException();
+
+        var updatedQuiz = quizService.updateQuiz(quizDTO.getId(), quizDTO);
+
         return ResponseEntity.ok(updatedQuiz);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteQuiz(@PathVariable Long id)
+    @DeleteMapping
+    public ResponseEntity<Void> deleteQuiz(@RequestBody QuizDTO quizDTO)
     {
 
-        quizService.deleteQuiz(id);
+        if (quizDTO.getId() == null || quizDTO.getId() <= 0) throw new BadRequestException();
+
+        quizService.deleteQuiz(quizDTO.getId());
+
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/dept/{deptName}")
-    public ResponseEntity<List<QuizDTO>> getQuizByDept(@PathVariable String deptName)
-    {
-
-        return ResponseEntity.ok(quizService.getQuizByDeptName(deptName));
     }
 
 }

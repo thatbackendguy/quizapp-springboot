@@ -1,8 +1,10 @@
 package com.thatbackendguy.quizapp.service;
 
 import com.thatbackendguy.quizapp.dto.QuizDTO;
+import com.thatbackendguy.quizapp.dto.QuizResponseDTO;
 import com.thatbackendguy.quizapp.entity.DepartmentEntity;
 import com.thatbackendguy.quizapp.entity.QuizEntity;
+import com.thatbackendguy.quizapp.exception.BadRequestException;
 import com.thatbackendguy.quizapp.exception.DepartmentNotFoundException;
 import com.thatbackendguy.quizapp.exception.QuizNotFoundException;
 import com.thatbackendguy.quizapp.repository.DepartmentRepository;
@@ -11,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,24 +36,42 @@ public class QuizService
         this.modelMapper = modelMapper;
     }
 
-    public List<QuizDTO> getAllQuizzes()
+    public List<QuizResponseDTO> getQuiz(QuizDTO quizDTO)
     {
 
-        var quizzes = quizRepository.findAll();
+        List<QuizEntity> quizzes;
 
-        if (quizzes.isEmpty()) throw new QuizNotFoundException();
+        if (quizDTO.getId() != null)
+        {
+            quizzes = quizRepository.findById(quizDTO.getId())
+                    .map(Collections::singletonList)
+                    .orElseThrow(() -> new QuizNotFoundException(quizDTO.getId()));
+        }
+        else if (quizDTO.getDeptName() != null && !quizDTO.getDeptName().isEmpty())
+        {
+            var department = departmentRepository.findByName(quizDTO.getDeptName());
+            if (department == null)
+            {
+                throw new DepartmentNotFoundException(quizDTO.getDeptName());
+            }
+            quizzes = quizRepository.findByDeptId(department.getId());
+            if (quizzes.isEmpty())
+            {
+                throw new QuizNotFoundException(quizDTO.getDeptName());
+            }
+        }
+        else
+        {
+            quizzes = quizRepository.findAll();
+            if (quizzes.isEmpty())
+            {
+                throw new QuizNotFoundException();
+            }
+        }
 
         return quizzes.stream()
-                .map(quizEntity -> modelMapper.map(quizEntity, QuizDTO.class))
+                .map(quizEntity -> modelMapper.map(quizEntity, QuizResponseDTO.class))
                 .collect(Collectors.toList());
-    }
-
-    public QuizDTO getQuizById(Long id)
-    {
-
-        var quiz = quizRepository.findById(id).orElseThrow(() -> new QuizNotFoundException(id));
-
-        return modelMapper.map(quiz, QuizDTO.class);
     }
 
     public QuizDTO createQuiz(QuizDTO quizDTO)
@@ -73,6 +94,8 @@ public class QuizService
     public QuizDTO updateQuiz(Long id, QuizDTO quizDetails)
     {
 
+        if (id == null) throw new BadRequestException();
+
         var quizEntity = quizRepository.findById(id).map(quiz ->
         {
             quiz.setQuestion(quizDetails.getQuestion());
@@ -94,26 +117,13 @@ public class QuizService
     public void deleteQuiz(Long id)
     {
 
+        if (id == null) throw new BadRequestException();
+
         if (!quizRepository.existsById(id))
         {
             throw new QuizNotFoundException(id);
         }
         quizRepository.deleteById(id);
-    }
-
-    public List<QuizDTO> getQuizByDeptName(String deptName)
-    {
-
-        var department = departmentRepository.findByName(deptName);
-
-        if (department == null) throw new DepartmentNotFoundException(deptName);
-
-        var quizzes = quizRepository.findByDeptId(department.getId());
-
-        if (quizzes.isEmpty()) throw new QuizNotFoundException(deptName);
-
-        return quizzes.stream().map(quiz -> modelMapper.map(quiz, QuizDTO.class)).collect(Collectors.toList());
-
     }
 
 }

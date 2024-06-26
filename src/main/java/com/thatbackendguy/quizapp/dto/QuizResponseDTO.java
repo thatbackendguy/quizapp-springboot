@@ -4,23 +4,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO
+public class QuizResponseDTO
 {
 
     private Long id;
 
-    private String name;
+    private String question;
 
-    private String username;
+    private List<String> options;
 
-    private String email;
-
-    private String password;
-
-    private Long departmentId;
+    private String answer;
 
     private DepartmentDTO department;
 

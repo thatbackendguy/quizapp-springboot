@@ -1,8 +1,8 @@
 package com.thatbackendguy.quizapp.controller;
 
-import com.thatbackendguy.quizapp.dto.QuizDTO;
+import com.thatbackendguy.quizapp.dto.QuizResponseDTO;
 import com.thatbackendguy.quizapp.dto.UserDTO;
-import com.thatbackendguy.quizapp.dto.UserUpdateDTO;
+import com.thatbackendguy.quizapp.exception.BadRequestException;
 import com.thatbackendguy.quizapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,39 +27,39 @@ public class UserController
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers()
+    public ResponseEntity<List<UserDTO>> getUsers(@RequestBody(required = false) UserDTO userDTO)
     {
 
-        var users = userService.getAllUsers();
+        var users = userService.getUsers(userDTO);
+
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id)
+    @PutMapping
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO)
     {
 
-        var user = userService.getUserById(id);
-        return ResponseEntity.ok(user);
-    }
+        if (userDTO.getId() == null || userDTO.getId() <= 0 || userDTO.getDepartmentId() == null || userDTO.getDepartmentId() <= 0 || userDTO.getEmail()
+                .isEmpty() || userDTO.getName().isEmpty()) throw new BadRequestException();
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserUpdateDTO userUpdateDTO)
-    {
+        var updatedUser = userService.updateUser(userDTO.getId(), userDTO);
 
-        var updatedUser = userService.updateUser(id, userUpdateDTO);
         return ResponseEntity.ok(updatedUser);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id)
+    @DeleteMapping
+    public ResponseEntity<Void> deleteUser(@RequestBody UserDTO userDTO)
     {
 
-        userService.deleteUser(id);
+        if (userDTO.getId() == null || userDTO.getId() <= 0) throw new BadRequestException();
+
+        userService.deleteUser(userDTO.getId());
+
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/home")
-    public ResponseEntity<List<QuizDTO>> getUserQuizzes()
+    public ResponseEntity<List<QuizResponseDTO>> getUserQuizzes()
     {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

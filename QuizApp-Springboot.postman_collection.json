@@ -10,7 +10,10 @@
 			"name": "Users",
 			"item": [
 				{
-					"name": "single",
+					"name": "GET",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -24,8 +27,17 @@
 						},
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":\"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8080/api/users/6",
+							"raw": "http://localhost:8080/api/users",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -33,8 +45,7 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"users",
-								"6"
+								"users"
 							]
 						}
 					},
@@ -55,37 +66,15 @@
 						},
 						"method": "DELETE",
 						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/users/9",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"users",
-								"9"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "all",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGF0YmFja2VuZGd1eSIsImlhdCI6MTcxOTM4NTI4NCwiZXhwIjoxNzE5NDAzMjg0fQ.K0dwju21Wva-YR0MXpMBBhEIcXo9fqcaE1x6xXVYApzlMFxZX9r-RQ3V1Nd2XbvBxkzxaBK45zxndb8gKa43lw",
-									"type": "string"
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":\"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
-						"method": "GET",
-						"header": [],
 						"url": {
 							"raw": "http://localhost:8080/api/users",
 							"protocol": "http",
@@ -118,7 +107,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"departmentId\": 1\n}",
+							"raw": "{\n    \"id\": 6,\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"departmentId\": 1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -126,7 +115,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/users/6",
+							"raw": "http://localhost:8080/api/users",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -134,8 +123,7 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"users",
-								"6"
+								"users"
 							]
 						}
 					},
@@ -178,37 +166,6 @@
 			"name": "Department",
 			"item": [
 				{
-					"name": "single",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGF0YmFja2VuZGd1eSIsImlhdCI6MTcxOTM4NTI4NCwiZXhwIjoxNzE5NDAzMjg0fQ.K0dwju21Wva-YR0MXpMBBhEIcXo9fqcaE1x6xXVYApzlMFxZX9r-RQ3V1Nd2XbvBxkzxaBK45zxndb8gKa43lw",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/departments/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"departments",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "delete single",
 					"request": {
 						"auth": {
@@ -223,8 +180,17 @@
 						},
 						"method": "DELETE",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":\"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8080/api/departments/3",
+							"raw": "http://localhost:8080/api/departments",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -232,15 +198,17 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"departments",
-								"3"
+								"departments"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "all",
+					"name": "GET",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -254,6 +222,15 @@
 						},
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":6\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "http://localhost:8080/api/departments",
 							"protocol": "http",
@@ -325,7 +302,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"Development\"\n}",
+							"raw": "{\n    \"id\": \"\",\n    \"name\": \"Development\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -333,7 +310,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/departments/5",
+							"raw": "http://localhost:8080/api/departments",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -341,8 +318,7 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"departments",
-								"5"
+								"departments"
 							]
 						}
 					},
@@ -354,38 +330,10 @@
 			"name": "Quizzes",
 			"item": [
 				{
-					"name": "single",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGF0YmFja2VuZGd1eSIsImlhdCI6MTcxOTM4NTI4NCwiZXhwIjoxNzE5NDAzMjg0fQ.K0dwju21Wva-YR0MXpMBBhEIcXo9fqcaE1x6xXVYApzlMFxZX9r-RQ3V1Nd2XbvBxkzxaBK45zxndb8gKa43lw",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/quizzes/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"quizzes",
-								"1"
-							]
-						}
+					"name": "get",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
 					},
-					"response": []
-				},
-				{
-					"name": "by deptName",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -399,8 +347,17 @@
 						},
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":\"\",\n    \"deptName\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8080/api/quizzes/dept/Development",
+							"raw": "http://localhost:8080/api/quizzes",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -408,9 +365,7 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"quizzes",
-								"dept",
-								"Development"
+								"quizzes"
 							]
 						}
 					},
@@ -419,39 +374,27 @@
 				{
 					"name": "delete single",
 					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/quizzes/4",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"quizzes",
-								"4"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "all",
-					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGF0YmFja2VuZGd1eSIsImlhdCI6MTcxOTM4NTI4NCwiZXhwIjoxNzE5NDAzMjg0fQ.K0dwju21Wva-YR0MXpMBBhEIcXo9fqcaE1x6xXVYApzlMFxZX9r-RQ3V1Nd2XbvBxkzxaBK45zxndb8gKa43lw",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGF0YmFja2VuZGd1eSIsImlhdCI6MTcxOTM5NDYwMywiZXhwIjoxNzE5NDEyNjAzfQ._raC-3xkHQ-z4BYoPxizWOSJanePv-HwrzwUMIz-sb3cB0QA1zl4aID1aQKMbSH7dMj-IhnCTuSQnFgUOnRw9A",
 									"type": "string"
 								}
 							]
 						},
-						"method": "GET",
+						"method": "DELETE",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":\"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "http://localhost:8080/api/quizzes",
 							"protocol": "http",
@@ -523,7 +466,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"Miscelaneous\"\n}",
+							"raw": "{\n    \"id\": \"\",\n    \"question\": \"\",\n    \"options\": [],\n    \"answer\": \"\",\n    \"department\": {\n        \"id\": \"\",\n        \"name\": \"\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -531,7 +474,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/departments/4",
+							"raw": "http://localhost:8080/api/quizzes",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -539,8 +482,7 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"departments",
-								"4"
+								"quizzes"
 							]
 						}
 					},
@@ -561,7 +503,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"{{$randomFirstName}}\",\n  \"username\":\"{{$randomUserName}}\",\n  \"email\": \"{{$randomEmail}}\",\n  \"password\": \"123456\",\n  \"department\": {\n    \"id\": 5\n  }\n}",
+							"raw": "{\n  \"name\": \"{{$randomFirstName}}\",\n  \"username\":\"{{$randomUserName}}\",\n  \"email\": \"{{$randomEmail}}\",\n  \"password\": \"123456\",\n  \"department\": {\n    \"id\": 4\n  }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -594,7 +536,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\":\"krupal\",\n    \"password\":\"123456\"\n}",
+							"raw": "{\n    \"username\":\"thatbackendguy\",\n    \"password\":\"123456\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"

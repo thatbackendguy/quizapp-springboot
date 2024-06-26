@@ -43,7 +43,14 @@ public class AuthController
     public ResponseEntity<JwtResponseDTO> login(@RequestBody JwtRequestDTO request)
     {
 
-        if (request.getUsername().isEmpty() || request.getPassword().isEmpty()) throw new BadRequestException();
+        if (request.getUsername().isEmpty())
+        {
+            throw new BadRequestException("Username is required");
+        }
+        else if (request.getPassword().isEmpty())
+        {
+            throw new BadRequestException("Password is required");
+        }
 
         this.doAuthenticate(request.getUsername(), request.getPassword());
 
@@ -60,9 +67,26 @@ public class AuthController
     public ResponseEntity<UserDTO> createUser(@RequestBody UserEntity userEntity)
     {
 
-        if (userEntity.getUsername().isEmpty() || userEntity.getPassword().isEmpty() || userEntity.getName()
-                .isEmpty() || userEntity.getEmail().isEmpty() || userEntity.getDepartment().getId() <= 0)
-            throw new BadRequestException();
+        if (userEntity.getUsername().isEmpty())
+        {
+            throw new BadRequestException("Username is required");
+        }
+        else if (userEntity.getPassword().isEmpty())
+        {
+            throw new BadRequestException("Password is required");
+        }
+        else if (userEntity.getName().isEmpty())
+        {
+            throw new BadRequestException("Name is required");
+        }
+        else if (userEntity.getEmail().isEmpty())
+        {
+            throw new BadRequestException("Email is required");
+        }
+        else if (userEntity.getDepartment().getId() <= 0)
+        {
+            throw new BadRequestException("Valid department ID is required");
+        }
 
         var createdUser = userService.createUser(userEntity);
 

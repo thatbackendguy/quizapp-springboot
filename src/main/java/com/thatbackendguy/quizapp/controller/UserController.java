@@ -39,8 +39,30 @@ public class UserController
     public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO)
     {
 
-        if (userDTO.getId() == null || userDTO.getId() <= 0 || userDTO.getDepartmentId() == null || userDTO.getDepartmentId() <= 0 || userDTO.getEmail()
-                .isEmpty() || userDTO.getName().isEmpty()) throw new BadRequestException();
+        if (userDTO.getId() == null)
+        {
+            throw new BadRequestException("User ID is required");
+        }
+        else if (userDTO.getId() <= 0)
+        {
+            throw new BadRequestException("User ID must be a positive number");
+        }
+        else if (userDTO.getDepartmentId() == null)
+        {
+            throw new BadRequestException("Department ID is required");
+        }
+        else if (userDTO.getDepartmentId() <= 0)
+        {
+            throw new BadRequestException("Department ID must be a positive number");
+        }
+        else if (userDTO.getEmail().isEmpty())
+        {
+            throw new BadRequestException("Email is required");
+        }
+        else if (userDTO.getName().isEmpty())
+        {
+            throw new BadRequestException("Name is required");
+        }
 
         var updatedUser = userService.updateUser(userDTO.getId(), userDTO);
 
@@ -51,7 +73,14 @@ public class UserController
     public ResponseEntity<Void> deleteUser(@RequestBody UserDTO userDTO)
     {
 
-        if (userDTO.getId() == null || userDTO.getId() <= 0) throw new BadRequestException();
+        if (userDTO.getId() == null)
+        {
+            throw new BadRequestException("User ID is required");
+        }
+        else if (userDTO.getId() <= 0)
+        {
+            throw new BadRequestException("User ID must be a positive number");
+        }
 
         userService.deleteUser(userDTO.getId());
 

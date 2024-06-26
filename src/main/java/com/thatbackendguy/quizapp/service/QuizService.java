@@ -95,7 +95,10 @@ public class QuizService
     public QuizDTO updateQuiz(Long id, QuizDTO quizDetails)
     {
 
-        if (id == null) throw new BadRequestException();
+        if (id == null)
+        {
+            throw new BadRequestException("ID is required");
+        }
 
         var quizEntity = quizRepository.findById(id).map(quiz ->
         {
@@ -118,7 +121,10 @@ public class QuizService
     public void deleteQuiz(Long id)
     {
 
-        if (id == null) throw new BadRequestException();
+        if (id == null)
+        {
+            throw new BadRequestException("ID is required");
+        }
 
         if (!quizRepository.existsById(id))
         {

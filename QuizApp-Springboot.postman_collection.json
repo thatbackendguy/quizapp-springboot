@@ -29,7 +29,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\":6\n}",
+							"raw": "{\n    \"id\":\"6\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -59,7 +59,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGF0YmFja2VuZGd1eSIsImlhdCI6MTcxOTM4NTI4NCwiZXhwIjoxNzE5NDAzMjg0fQ.K0dwju21Wva-YR0MXpMBBhEIcXo9fqcaE1x6xXVYApzlMFxZX9r-RQ3V1Nd2XbvBxkzxaBK45zxndb8gKa43lw",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGF0YmFja2VuZGd1eSIsImlhdCI6MTcxOTQwNDU5OSwiZXhwIjoxNzE5NDIyNTk5fQ.9GsvSTBr_lo8v5jbH5um616PB1ewAm3IUyx7ZsBVGPgnVVuQAHYVwuVZYc2vwS79eI9dL8qTFX-28u8j9sadlA",
 									"type": "string"
 								}
 							]
@@ -293,7 +293,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGF0YmFja2VuZGd1eSIsImlhdCI6MTcxOTM4NTI4NCwiZXhwIjoxNzE5NDAzMjg0fQ.K0dwju21Wva-YR0MXpMBBhEIcXo9fqcaE1x6xXVYApzlMFxZX9r-RQ3V1Nd2XbvBxkzxaBK45zxndb8gKa43lw",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGF0YmFja2VuZGd1eSIsImlhdCI6MTcxOTQwNTQwMywiZXhwIjoxNzE5NDIzNDAzfQ.omuTov5T9NyaFE1AwuGNDs6PdUqlPbyTDbyXsiw0XTYlehmIXwe9LwsEuYLC9fyHfEo4NW_5HBNZzEIOFozSZQ",
 									"type": "string"
 								}
 							]
@@ -302,7 +302,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": \"\",\n    \"name\": \"Development\"\n}",
+							"raw": "{\n    \"id\": \"5\",\n    \"name\": \"Sales\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -349,7 +349,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\":\"\",\n    \"deptName\": \"\"\n}",
+							"raw": "{\n    \n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -388,7 +388,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\":\"\"\n}",
+							"raw": "{\n    \"id\":\"2\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -418,7 +418,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGF0YmFja2VuZGd1eSIsImlhdCI6MTcxOTM4NTI4NCwiZXhwIjoxNzE5NDAzMjg0fQ.K0dwju21Wva-YR0MXpMBBhEIcXo9fqcaE1x6xXVYApzlMFxZX9r-RQ3V1Nd2XbvBxkzxaBK45zxndb8gKa43lw",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGF0YmFja2VuZGd1eSIsImlhdCI6MTcxOTQwNDU5OSwiZXhwIjoxNzE5NDIyNTk5fQ.9GsvSTBr_lo8v5jbH5um616PB1ewAm3IUyx7ZsBVGPgnVVuQAHYVwuVZYc2vwS79eI9dL8qTFX-28u8j9sadlA",
 									"type": "string"
 								}
 							]
@@ -457,7 +457,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGF0YmFja2VuZGd1eSIsImlhdCI6MTcxOTM4NTI4NCwiZXhwIjoxNzE5NDAzMjg0fQ.K0dwju21Wva-YR0MXpMBBhEIcXo9fqcaE1x6xXVYApzlMFxZX9r-RQ3V1Nd2XbvBxkzxaBK45zxndb8gKa43lw",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGF0YmFja2VuZGd1eSIsImlhdCI6MTcxOTQwNDU5OSwiZXhwIjoxNzE5NDIyNTk5fQ.9GsvSTBr_lo8v5jbH5um616PB1ewAm3IUyx7ZsBVGPgnVVuQAHYVwuVZYc2vwS79eI9dL8qTFX-28u8j9sadlA",
 									"type": "string"
 								}
 							]
@@ -466,7 +466,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": 3,\n    \"question\": \"Which is famous USB type?\",\n    \"options\": [\"Type A\",\"Type B\",\"Type C\",\"Type D\"],\n    \"answer\": \"Type B\",\n    \"department\": {\n        \"id\": 5,\n        \"name\": \"Development\"\n    }\n}",
+							"raw": "{\n    \"id\": 4,\n    \"question\": \"\",\n    \"options\": [\"Type A\",\"Type B\",\"Type C\",\"Type D\"],\n    \"answer\": \"Type B\",\n    \"department\": {\n        \"id\": 5,\n        \"name\": \"Development\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -493,39 +493,6 @@
 		{
 			"name": "Auth",
 			"item": [
-				{
-					"name": "add",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"name\": \"{{$randomFirstName}}\",\n  \"username\":\"{{$randomUserName}}\",\n  \"email\": \"{{$randomEmail}}\",\n  \"password\": \"123456\",\n  \"department\": {\n    \"id\": 6\n  }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/api/auth/create-user",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"auth",
-								"create-user"
-							]
-						}
-					},
-					"response": []
-				},
 				{
 					"name": "login",
 					"request": {
@@ -554,6 +521,39 @@
 								"api",
 								"auth",
 								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{$randomFirstName}}\",\n  \"username\":\"{{$randomUserName}}\",\n  \"email\": \"{{$randomEmail}}\",\n  \"password\": \"\",\n  \"department\": {\n    \"id\": 6\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/create-user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"create-user"
 							]
 						}
 					},

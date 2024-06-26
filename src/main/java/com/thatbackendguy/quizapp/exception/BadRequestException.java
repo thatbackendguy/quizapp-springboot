@@ -9,4 +9,10 @@ public class BadRequestException extends RuntimeException
         super("Bad request! Invalid body");
     }
 
+    public BadRequestException(String errorMessage)
+    {
+
+        super(errorMessage);
+    }
+
 }

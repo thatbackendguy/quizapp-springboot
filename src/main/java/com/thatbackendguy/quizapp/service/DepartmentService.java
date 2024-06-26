@@ -46,7 +46,7 @@ public class DepartmentService
         }
         else
         {
-            throw new BadRequestException();
+            throw new BadRequestException("Department ID must be a positive number");
         }
 
         if (departments.isEmpty())
@@ -62,6 +62,8 @@ public class DepartmentService
     public DepartmentDTO createDepartment(DepartmentDTO departmentDTO)
     {
 
+        if (departmentDTO.getName().isEmpty()) throw new BadRequestException("Name is required");
+
         var departmentEntity = modelMapper.map(departmentDTO, DepartmentEntity.class);
 
         departmentEntity = departmentRepository.save(departmentEntity);
@@ -72,7 +74,10 @@ public class DepartmentService
     public DepartmentDTO updateDepartment(Long id, DepartmentDTO departmentDetails)
     {
 
-        if (id == null) throw new BadRequestException();
+        if (id == null)
+        {
+            throw new BadRequestException("ID is required");
+        }
 
         var departmentEntity = departmentRepository.findById(id).map(department ->
         {
@@ -86,7 +91,10 @@ public class DepartmentService
     public void deleteDepartment(Long id)
     {
 
-        if (id == null) throw new BadRequestException();
+        if (id == null)
+        {
+            throw new BadRequestException("ID is required");
+        }
 
         if (!departmentRepository.existsById(id))
         {

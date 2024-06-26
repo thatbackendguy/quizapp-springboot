@@ -37,8 +37,6 @@ public class DepartmentController
     public ResponseEntity<DepartmentDTO> createDepartment(@RequestBody DepartmentDTO departmentDTO)
     {
 
-        if (departmentDTO.getName().isEmpty()) throw new BadRequestException();
-
         var createdDepartment = departmentService.createDepartment(departmentDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdDepartment);
@@ -48,8 +46,18 @@ public class DepartmentController
     public ResponseEntity<DepartmentDTO> updateDepartment(@RequestBody DepartmentDTO departmentDTO)
     {
 
-        if (departmentDTO.getId() == null || departmentDTO.getId() <= 0 || departmentDTO.getName().isEmpty())
-            throw new BadRequestException();
+        if (departmentDTO.getId() == null)
+        {
+            throw new BadRequestException("Department ID is required");
+        }
+        else if (departmentDTO.getId() <= 0)
+        {
+            throw new BadRequestException("Department ID must be a positive number");
+        }
+        else if (departmentDTO.getName().isEmpty())
+        {
+            throw new BadRequestException("Department name is required");
+        }
 
         var updatedDepartment = departmentService.updateDepartment(departmentDTO.getId(), departmentDTO);
 
@@ -60,7 +68,14 @@ public class DepartmentController
     public ResponseEntity<Void> deleteDepartment(@RequestBody DepartmentDTO departmentDTO)
     {
 
-        if (departmentDTO.getId() == null || departmentDTO.getId() <= 0) throw new BadRequestException();
+        if (departmentDTO.getId() == null)
+        {
+            throw new BadRequestException("Department ID is required");
+        }
+        else if (departmentDTO.getId() <= 0)
+        {
+            throw new BadRequestException("Department ID must be a positive number");
+        }
 
         departmentService.deleteDepartment(departmentDTO.getId());
 

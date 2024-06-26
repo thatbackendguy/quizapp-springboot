@@ -29,7 +29,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\":\"\"\n}",
+							"raw": "{\n    \"id\":6\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -224,7 +224,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\":6\n}",
+							"raw": "{\n    \"id\":\"\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -466,7 +466,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": \"\",\n    \"question\": \"\",\n    \"options\": [],\n    \"answer\": \"\",\n    \"department\": {\n        \"id\": \"\",\n        \"name\": \"\"\n    }\n}",
+							"raw": "{\n    \"id\": 3,\n    \"question\": \"Which is famous USB type?\",\n    \"options\": [\"Type A\",\"Type B\",\"Type C\",\"Type D\"],\n    \"answer\": \"Type B\",\n    \"department\": {\n        \"id\": 5,\n        \"name\": \"Development\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"

@@ -45,8 +45,6 @@ public class SecurityConfig
                 .permitAll()
                 .requestMatchers("/api/auth/create-user")
                 .permitAll()
-                .anyRequest()
-                .authenticated()
                 .and()
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

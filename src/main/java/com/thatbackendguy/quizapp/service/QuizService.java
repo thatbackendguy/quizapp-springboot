@@ -9,6 +9,8 @@ import com.thatbackendguy.quizapp.exception.DepartmentNotFoundException;
 import com.thatbackendguy.quizapp.exception.QuizNotFoundException;
 import com.thatbackendguy.quizapp.repository.DepartmentRepository;
 import com.thatbackendguy.quizapp.repository.QuizRepository;
+import com.thatbackendguy.quizapp.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,17 +29,27 @@ public class QuizService
 
     private final ModelMapper modelMapper;
 
+    private final UserRepository userRepository;
+
     @Autowired
-    public QuizService(QuizRepository quizRepository, DepartmentRepository departmentRepository, ModelMapper modelMapper)
+    public QuizService(QuizRepository quizRepository, DepartmentRepository departmentRepository, ModelMapper modelMapper, UserService userService, UserRepository userRepository)
     {
 
         this.quizRepository = quizRepository;
         this.departmentRepository = departmentRepository;
+        this.userRepository = userRepository;
         this.modelMapper = modelMapper;
     }
 
-    public List<QuizResponseDTO> getQuiz(QuizDTO quizDTO)
+    public List<QuizResponseDTO> getQuiz(QuizDTO quizDTO, HttpServletRequest request)
     {
+
+        var currentUser = request.getAttribute("username");
+
+        if (currentUser == null) throw new RuntimeException("Unauthorized user");
+
+        if (!userRepository.findByUsername(currentUser.toString()).getDepartment().getName().equals("Admin"))
+            throw new RuntimeException("Unauthorized user");
 
         List<QuizEntity> quizzes;
 
@@ -75,8 +87,15 @@ public class QuizService
                 .collect(Collectors.toList());
     }
 
-    public QuizDTO createQuiz(QuizDTO quizDTO)
+    public QuizDTO createQuiz(QuizDTO quizDTO, HttpServletRequest request)
     {
+
+        var currentUser = request.getAttribute("username");
+
+        if (currentUser == null) throw new RuntimeException("Unauthorized user");
+
+        if (!userRepository.findByUsername(currentUser.toString()).getDepartment().getName().equals("Admin"))
+            throw new RuntimeException("Unauthorized user");
 
         if (quizDTO.getQuestion().isEmpty())
         {
@@ -113,8 +132,15 @@ public class QuizService
         return modelMapper.map(quiz, QuizDTO.class);
     }
 
-    public QuizDTO updateQuiz(QuizDTO quizDTO)
+    public QuizDTO updateQuiz(QuizDTO quizDTO, HttpServletRequest request)
     {
+
+        var currentUser = request.getAttribute("username");
+
+        if (currentUser == null) throw new RuntimeException("Unauthorized user");
+
+        if (!userRepository.findByUsername(currentUser.toString()).getDepartment().getName().equals("Admin"))
+            throw new RuntimeException("Unauthorized user");
 
         if (quizDTO.getId() == null)
         {
@@ -163,8 +189,15 @@ public class QuizService
         return modelMapper.map(quizEntity, QuizDTO.class);
     }
 
-    public void deleteQuiz(QuizDTO quizDTO)
+    public void deleteQuiz(QuizDTO quizDTO, HttpServletRequest request)
     {
+
+        var currentUser = request.getAttribute("username");
+
+        if (currentUser == null) throw new RuntimeException("Unauthorized user");
+
+        if (!userRepository.findByUsername(currentUser.toString()).getDepartment().getName().equals("Admin"))
+            throw new RuntimeException("Unauthorized user");
 
         if (quizDTO.getId() == null)
         {

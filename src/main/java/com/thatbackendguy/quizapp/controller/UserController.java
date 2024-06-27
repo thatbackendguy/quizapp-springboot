@@ -4,11 +4,11 @@ import com.thatbackendguy.quizapp.dto.QuizResponseDTO;
 import com.thatbackendguy.quizapp.dto.QuizResultResponseDTO;
 import com.thatbackendguy.quizapp.dto.QuizSubmit;
 import com.thatbackendguy.quizapp.dto.UserDTO;
+import com.thatbackendguy.quizapp.exception.UserNotFoundException;
 import com.thatbackendguy.quizapp.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,69 +28,52 @@ public class UserController
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getUsers(@RequestBody(required = false) UserDTO userDTO)
+    public ResponseEntity<List<UserDTO>> getUsers(@RequestBody(required = false) UserDTO userDTO, HttpServletRequest request)
     {
 
-        var users = userService.getUsers(userDTO);
+        var users = userService.getUsers(userDTO, request);
 
         return ResponseEntity.ok(users);
     }
 
     @PutMapping
-    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO)
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO, HttpServletRequest request)
     {
 
-        var updatedUser = userService.updateUser(userDTO);
+        var updatedUser = userService.updateUser(userDTO, request);
 
         return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteUser(@RequestBody UserDTO userDTO)
+    public ResponseEntity<Void> deleteUser(@RequestBody UserDTO userDTO, HttpServletRequest request)
     {
 
-        userService.deleteUser(userDTO);
+        userService.deleteUser(userDTO, request);
 
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/home")
-    public ResponseEntity<List<QuizResponseDTO>> getUserQuizzes()
+    public ResponseEntity<List<QuizResponseDTO>> getUserQuizzes(HttpServletRequest request)
     {
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var username = request.getAttribute("username");
 
-        String username;
+        if (username == null) throw new UserNotFoundException();
 
-        if (principal instanceof UserDetails)
-        {
-            username = ( (UserDetails) principal ).getUsername();
-        }
-        else
-        {
-            username = principal.toString();
-        }
-
-        return ResponseEntity.ok(userService.getQuizzes(username));
+        return ResponseEntity.ok(userService.getQuizzes(username.toString()));
     }
 
     @PostMapping("/submit-quiz")
-    public ResponseEntity<QuizResultResponseDTO> submitQuiz(@RequestBody List<QuizSubmit> quizSubmitDTO)
+    public ResponseEntity<QuizResultResponseDTO> submitQuiz(@RequestBody List<QuizSubmit> quizSubmitDTO, HttpServletRequest request)
     {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        String username;
+        var username = request.getAttribute("username");
 
-        if (principal instanceof UserDetails)
-        {
-            username = ( (UserDetails) principal ).getUsername();
-        }
-        else
-        {
-            username = principal.toString();
-        }
+        if (username == null) throw new UserNotFoundException();
 
-        return ResponseEntity.ok(userService.getQuizResult(username , quizSubmitDTO));
+        return ResponseEntity.ok(userService.getQuizResult(username.toString(), quizSubmitDTO));
     }
 
 }

@@ -5,6 +5,7 @@ import com.thatbackendguy.quizapp.dto.JwtResponseDTO;
 import com.thatbackendguy.quizapp.dto.UserDTO;
 import com.thatbackendguy.quizapp.entity.UserEntity;
 import com.thatbackendguy.quizapp.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

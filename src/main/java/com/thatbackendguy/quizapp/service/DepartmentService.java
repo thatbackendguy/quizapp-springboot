@@ -5,6 +5,8 @@ import com.thatbackendguy.quizapp.entity.DepartmentEntity;
 import com.thatbackendguy.quizapp.exception.BadRequestException;
 import com.thatbackendguy.quizapp.exception.DepartmentNotFoundException;
 import com.thatbackendguy.quizapp.repository.DepartmentRepository;
+import com.thatbackendguy.quizapp.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,16 +23,26 @@ public class DepartmentService
 
     private final ModelMapper modelMapper;
 
+    private final UserRepository userRepository;
+
     @Autowired
-    public DepartmentService(DepartmentRepository departmentRepository, ModelMapper modelMapper)
+    public DepartmentService(DepartmentRepository departmentRepository, ModelMapper modelMapper, UserRepository userRepository)
     {
 
         this.departmentRepository = departmentRepository;
         this.modelMapper = modelMapper;
+        this.userRepository = userRepository;
     }
 
-    public List<DepartmentDTO> getDepartment(DepartmentDTO departmentDTO)
+    public List<DepartmentDTO> getDepartment(DepartmentDTO departmentDTO, HttpServletRequest request)
     {
+
+        var currentUser = request.getAttribute("username");
+
+        if (currentUser == null) throw new RuntimeException("Unauthorized user");
+
+        if (!userRepository.findByUsername(currentUser.toString()).getDepartment().getName().equals("Admin"))
+            throw new RuntimeException("Unauthorized user");
 
         List<DepartmentEntity> departments;
 
@@ -59,8 +71,15 @@ public class DepartmentService
                 .collect(Collectors.toList());
     }
 
-    public DepartmentDTO createDepartment(DepartmentDTO departmentDTO)
+    public DepartmentDTO createDepartment(DepartmentDTO departmentDTO, HttpServletRequest request)
     {
+
+        var currentUser = request.getAttribute("username");
+
+        if (currentUser == null) throw new RuntimeException("Unauthorized user");
+
+        if (!userRepository.findByUsername(currentUser.toString()).getDepartment().getName().equals("Admin"))
+            throw new RuntimeException("Unauthorized user");
 
         if (departmentDTO.getName().isEmpty()) throw new BadRequestException("Name is required");
 
@@ -71,8 +90,15 @@ public class DepartmentService
         return modelMapper.map(departmentEntity, DepartmentDTO.class);
     }
 
-    public DepartmentDTO updateDepartment(DepartmentDTO departmentDTO)
+    public DepartmentDTO updateDepartment(DepartmentDTO departmentDTO, HttpServletRequest request)
     {
+
+        var currentUser = request.getAttribute("username");
+
+        if (currentUser == null) throw new RuntimeException("Unauthorized user");
+
+        if (!userRepository.findByUsername(currentUser.toString()).getDepartment().getName().equals("Admin"))
+            throw new RuntimeException("Unauthorized user");
 
         if (departmentDTO.getId() == null)
         {
@@ -96,8 +122,16 @@ public class DepartmentService
         return modelMapper.map(departmentEntity, DepartmentDTO.class);
     }
 
-    public void deleteDepartment(DepartmentDTO departmentDTO)
+    public void deleteDepartment(DepartmentDTO departmentDTO, HttpServletRequest request)
     {
+
+        var currentUser = request.getAttribute("username");
+
+        if (currentUser == null) throw new RuntimeException("Unauthorized user");
+
+        if (!userRepository.findByUsername(currentUser.toString()).getDepartment().getName().equals("Admin"))
+            throw new RuntimeException("Unauthorized user");
+
         if (departmentDTO.getId() == null)
         {
             throw new BadRequestException("Department ID is required");

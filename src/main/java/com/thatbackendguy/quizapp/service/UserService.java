@@ -13,9 +13,9 @@ import com.thatbackendguy.quizapp.exception.UserNotFoundException;
 import com.thatbackendguy.quizapp.repository.DepartmentRepository;
 import com.thatbackendguy.quizapp.repository.QuizRepository;
 import com.thatbackendguy.quizapp.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -39,30 +39,47 @@ public class UserService
     @Autowired
     public UserService(UserRepository userRepository, DepartmentRepository departmentRepository, ModelMapper modelMapper, QuizRepository quizRepository)
     {
+
         this.userRepository = userRepository;
         this.departmentRepository = departmentRepository;
         this.modelMapper = modelMapper;
         this.quizRepository = quizRepository;
     }
 
-    public List<UserDTO> getUsers(UserDTO userDTO)
+    public List<UserDTO> getUsers(UserDTO userDTO, HttpServletRequest request)
     {
+
+        var currentUsername = request.getAttribute("username");
+
+        if (currentUsername == null) throw new RuntimeException("Unauthorized user");
+
+        var currentUserEntity = userRepository.findByUsername(currentUsername.toString());
+
+        if (currentUserEntity == null) throw new RuntimeException("User not found");
 
         List<UserEntity> users;
 
-        if (userDTO == null || userDTO.getId() == null)
+        if (currentUserEntity.getDepartment().getName().equals("Admin"))
         {
-            users = userRepository.findAll();
-        }
-        else if (userDTO.getId() > 0)
-        {
-            users = userRepository.findById(userDTO.getId())
-                    .map(Collections::singletonList)
-                    .orElseThrow(() -> new UserNotFoundException(userDTO.getId()));
+            // Admin can access all data
+            if (userDTO == null || userDTO.getId() == null)
+            {
+                users = userRepository.findAll();
+            }
+            else if (userDTO.getId() > 0)
+            {
+                users = userRepository.findById(userDTO.getId())
+                        .map(Collections::singletonList)
+                        .orElseThrow(() -> new UserNotFoundException(userDTO.getId()));
+            }
+            else
+            {
+                users = userRepository.findAll();
+            }
         }
         else
         {
-            users = userRepository.findAll();
+            users = Collections.singletonList(currentUserEntity);
         }
 
         if (users.isEmpty())
@@ -73,12 +90,27 @@ public class UserService
         return users.stream()
                 .map(userEntity -> modelMapper.map(userEntity, UserDTO.class))
                 .collect(Collectors.toList());
-
     }
 
-    public UserDTO updateUser(UserDTO userDTO)
+    public UserDTO updateUser(UserDTO userDTO, HttpServletRequest request)
     {
 
+        var currentUsername = request.getAttribute("username");
+
+        if (currentUsername == null) throw new RuntimeException("Unauthorized user");
+
+        var currentUserEntity = userRepository.findByUsername(currentUsername.toString());
+
+        if (currentUserEntity == null) throw new RuntimeException("User not found");
+
+        boolean isAdmin = currentUserEntity.getDepartment().getName().equals("Admin");
+
+        if (!isAdmin && !currentUserEntity.getId().equals(userDTO.getId()))
+        {
+            throw new RuntimeException("Unauthorized: You can only update your own profile");
+        }
+
+        // Existing validation checks
         if (userDTO.getId() == null)
         {
             throw new BadRequestException("User ID is required");
@@ -107,9 +139,10 @@ public class UserService
         var userEntity = userRepository.findById(userDTO.getId()).map(user ->
         {
             user.setName(userDTO.getName());
+            
             user.setEmail(userDTO.getEmail());
 
-            if (userDTO.getDepartmentId() != null)
+            if (isAdmin && userDTO.getDepartmentId() != null)
             {
                 DepartmentEntity departmentEntity = departmentRepository.findById(userDTO.getDepartmentId())
                         .orElseThrow(() -> new DepartmentNotFoundException(userDTO.getDepartmentId()));
@@ -122,8 +155,23 @@ public class UserService
         return modelMapper.map(userEntity, UserDTO.class);
     }
 
-    public void deleteUser(UserDTO userDTO)
+    public void deleteUser(UserDTO userDTO, HttpServletRequest request)
     {
+
+        var currentUsername = request.getAttribute("username");
+
+        if (currentUsername == null) throw new RuntimeException("Unauthorized user");
+
+        var currentUserEntity = userRepository.findByUsername(currentUsername.toString());
+
+        if (currentUserEntity == null) throw new RuntimeException("User not found");
+
+        boolean isAdmin = currentUserEntity.getDepartment().getName().equals("Admin");
+
+        if (!isAdmin && !currentUserEntity.getId().equals(userDTO.getId()))
+        {
+            throw new RuntimeException("Unauthorized: You can only delete your own profile");
+        }
 
         if (userDTO.getId() == null)
         {
@@ -179,7 +227,7 @@ public class UserService
 
             var quiz = quizzes.get(i);
 
-            if(!Objects.equals(quiz.getId(), response.getId())) throw new BadRequestException("Invalid quiz!");
+            if (!Objects.equals(quiz.getId(), response.getId())) throw new BadRequestException("Invalid quiz!");
 
             if (response.getAnswer().equals(quiz.getAnswer()))
             {

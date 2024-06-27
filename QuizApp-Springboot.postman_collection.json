@@ -137,7 +137,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJrcnVwYWwiLCJpYXQiOjE3MTkzODc5NzIsImV4cCI6MTcxOTQwNTk3Mn0.NwwLg5n0zlU2WZTv435Jfpn1Zb1gj0FoLFDtadUDEWw1RlFWsmFqY35NGR0ThNOb5QBNW6c4quZEa3pUPO2Pvw",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGF0YmFja2VuZGd1eSIsImlhdCI6MTcxOTQ2OTE0OSwiZXhwIjoxNzE5NDg3MTQ5fQ.tjgSZ3avgzwsZQo9IcADA0tYcTRR2HaIFJ9qxSuns7TVaQDLBQ5L7FdNKef526qWNsntrOw6rUwbPC688kJTwQ",
 									"type": "string"
 								}
 							]
@@ -155,6 +155,46 @@
 								"api",
 								"users",
 								"home"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "submit quiz",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGF0YmFja2VuZGd1eSIsImlhdCI6MTcxOTQ2NDk2NSwiZXhwIjoxNzE5NDgyOTY1fQ.ADKtluPpPCIug6IylD-5bBkC9l5NLaN90FxD3YsZoUsR9WvLegl6oCJuRDyeMuUVBInwJeKWCYl84n1-60yC5Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"id\":3,\n        \"answer\":\"Java\"\n    },\n    {\n        \"id\": 4,\n        \"answer\": \"Type B\"\n    }   \n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users/submit-quiz",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"submit-quiz"
 							]
 						}
 					},
@@ -293,7 +333,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGF0YmFja2VuZGd1eSIsImlhdCI6MTcxOTQwNTQwMywiZXhwIjoxNzE5NDIzNDAzfQ.omuTov5T9NyaFE1AwuGNDs6PdUqlPbyTDbyXsiw0XTYlehmIXwe9LwsEuYLC9fyHfEo4NW_5HBNZzEIOFozSZQ",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGF0YmFja2VuZGd1eSIsImlhdCI6MTcxOTQ2OTE0OSwiZXhwIjoxNzE5NDg3MTQ5fQ.tjgSZ3avgzwsZQo9IcADA0tYcTRR2HaIFJ9qxSuns7TVaQDLBQ5L7FdNKef526qWNsntrOw6rUwbPC688kJTwQ",
 									"type": "string"
 								}
 							]
@@ -302,7 +342,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": \"5\",\n    \"name\": \"Sales\"\n}",
+							"raw": "{\n    \"id\": \"1\",\n    \"name\": \"Admin\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"

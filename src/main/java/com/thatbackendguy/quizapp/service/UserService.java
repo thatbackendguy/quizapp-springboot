@@ -61,7 +61,6 @@ public class UserService
 
         if (currentUserEntity.getDepartment().getName().equals("Admin"))
         {
-            // Admin can access all data
             if (userDTO == null || userDTO.getId() == null)
             {
                 users = userRepository.findAll();
@@ -110,7 +109,6 @@ public class UserService
             throw new RuntimeException("Unauthorized: You can only update your own profile");
         }
 
-        // Existing validation checks
         if (userDTO.getId() == null)
         {
             throw new BadRequestException("User ID is required");

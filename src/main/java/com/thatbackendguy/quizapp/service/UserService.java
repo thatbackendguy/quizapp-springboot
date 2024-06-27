@@ -34,15 +34,11 @@ public class UserService
 
     private final ModelMapper modelMapper;
 
-    private final PasswordEncoder passwordEncoder;
-
     private final QuizRepository quizRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, DepartmentRepository departmentRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, QuizRepository quizRepository)
+    public UserService(UserRepository userRepository, DepartmentRepository departmentRepository, ModelMapper modelMapper, QuizRepository quizRepository)
     {
-
-        this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.departmentRepository = departmentRepository;
         this.modelMapper = modelMapper;
@@ -78,24 +74,6 @@ public class UserService
                 .map(userEntity -> modelMapper.map(userEntity, UserDTO.class))
                 .collect(Collectors.toList());
 
-    }
-
-    public UserDTO createUser(UserEntity user)
-    {
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        var deptId = user.getDepartment().getId();
-
-        var dept = departmentRepository.findById(deptId).orElseThrow(() -> new DepartmentNotFoundException(deptId));
-
-        user.setDepartment(dept);
-
-        var userEntity = modelMapper.map(user, UserEntity.class);
-
-        userEntity = userRepository.save(userEntity);
-
-        return modelMapper.map(userEntity, UserDTO.class);
     }
 
     public UserDTO updateUser(UserDTO userDTO)

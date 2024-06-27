@@ -13,10 +13,9 @@ public class GlobalExceptionHandler
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDTO> handleGenericException(Exception ex)
     {
-
         var error = new ErrorDTO();
         error.setMessage("Error: " + ex.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

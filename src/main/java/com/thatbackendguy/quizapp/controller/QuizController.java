@@ -37,6 +37,7 @@ public class QuizController
     public ResponseEntity<QuizDTO> createQuiz(@RequestBody QuizDTO quizDTO)
     {
 
+
         var createdQuiz = quizService.createQuiz(quizDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdQuiz);
@@ -59,5 +60,6 @@ public class QuizController
 
         return ResponseEntity.noContent().build();
     }
+
 
 }

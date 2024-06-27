@@ -1,6 +1,8 @@
 package com.thatbackendguy.quizapp.controller;
 
 import com.thatbackendguy.quizapp.dto.QuizResponseDTO;
+import com.thatbackendguy.quizapp.dto.QuizResultResponseDTO;
+import com.thatbackendguy.quizapp.dto.QuizSubmit;
 import com.thatbackendguy.quizapp.dto.UserDTO;
 import com.thatbackendguy.quizapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +72,25 @@ public class UserController
         }
 
         return ResponseEntity.ok(userService.getQuizzes(username));
+    }
+
+    @PostMapping("/submit-quiz")
+    public ResponseEntity<QuizResultResponseDTO> submitQuiz(@RequestBody List<QuizSubmit> quizSubmitDTO)
+    {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String username;
+
+        if (principal instanceof UserDetails)
+        {
+            username = ( (UserDetails) principal ).getUsername();
+        }
+        else
+        {
+            username = principal.toString();
+        }
+
+        return ResponseEntity.ok(userService.getQuizResult(username , quizSubmitDTO));
     }
 
 }

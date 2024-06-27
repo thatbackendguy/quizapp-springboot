@@ -1,11 +1,14 @@
 package com.thatbackendguy.quizapp.service;
 
 import com.thatbackendguy.quizapp.dto.QuizResponseDTO;
+import com.thatbackendguy.quizapp.dto.QuizResultResponseDTO;
+import com.thatbackendguy.quizapp.dto.QuizSubmit;
 import com.thatbackendguy.quizapp.dto.UserDTO;
 import com.thatbackendguy.quizapp.entity.DepartmentEntity;
 import com.thatbackendguy.quizapp.entity.UserEntity;
 import com.thatbackendguy.quizapp.exception.BadRequestException;
 import com.thatbackendguy.quizapp.exception.DepartmentNotFoundException;
+import com.thatbackendguy.quizapp.exception.QuizNotFoundException;
 import com.thatbackendguy.quizapp.exception.UserNotFoundException;
 import com.thatbackendguy.quizapp.repository.DepartmentRepository;
 import com.thatbackendguy.quizapp.repository.QuizRepository;
@@ -15,8 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -141,6 +146,7 @@ public class UserService
 
     public void deleteUser(UserDTO userDTO)
     {
+
         if (userDTO.getId() == null)
         {
             throw new BadRequestException("User ID is required");
@@ -168,6 +174,49 @@ public class UserService
         return quizzes.stream()
                 .map(quizEntity -> modelMapper.map(quizEntity, QuizResponseDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    public QuizResultResponseDTO getQuizResult(String username, List<QuizSubmit> quizSubmitDTO)
+    {
+
+        var userEntity = userRepository.findByUsername(username);
+
+        if (userEntity == null) throw new UserNotFoundException(username);
+
+        var quizzes = quizRepository.findByDeptId(userEntity.getDepartment().getId());
+
+        if (quizzes.isEmpty()) throw new QuizNotFoundException(userEntity.getDepartment().getName());
+
+        var totalQuizzes = quizzes.size();
+
+        var correct = 0;
+
+        var results = new ArrayList<QuizSubmit>();
+
+        if (totalQuizzes != quizSubmitDTO.size()) throw new BadRequestException("You must answer all the questions");
+
+        for (int i = 0; i < totalQuizzes; i++)
+        {
+            var response = quizSubmitDTO.get(i);
+
+            var quiz = quizzes.get(i);
+
+            if(!Objects.equals(quiz.getId(), response.getId())) throw new BadRequestException("Invalid quiz!");
+
+            if (response.getAnswer().equals(quiz.getAnswer()))
+            {
+                correct++;
+                results.add(new QuizSubmit(response.getId(), "true"));
+            }
+            else
+            {
+                results.add(new QuizSubmit(response.getId(), "false"));
+            }
+        }
+
+        var scorePercentage = (float) correct / totalQuizzes * 100;
+
+        return new QuizResultResponseDTO(scorePercentage, results);
     }
 
 }

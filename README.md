@@ -1,5 +1,5 @@
 # Quiz App (Backend)
-Quiz App (backend) using Spring Boot 3 + Spring Data JPA + Spring Security
+Quiz App (backend) using Spring Boot 3 + Spring Data JPA + Spring Security + JWT Authentication + Role based authentication
 
 ## APIs
 1. Auth:
